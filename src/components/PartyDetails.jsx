@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 
@@ -5,6 +6,14 @@ const SPARKLES = ['✦','✧','✦','✧','✦']
 
 export default function PartyDetails() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: .12 })
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 640)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   const item = (delay) => ({
     initial: { opacity: 0, y: 32 },
@@ -18,7 +27,7 @@ export default function PartyDetails() {
       ref={ref}
       style={{
         position: 'relative',
-        padding: '5rem 2rem',
+        padding: isMobile ? '3.5rem 1.2rem' : '5rem 2rem',
         background: 'radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)',
         overflow: 'hidden',
       }}
@@ -71,7 +80,7 @@ export default function PartyDetails() {
         <motion.div {...item(.1)} style={{
           background: '#C2185B',
           borderRadius: '20px',
-          padding: '2.5rem 2rem',
+          padding: isMobile ? '1.5rem 1.2rem' : '2.5rem 2rem',
           boxShadow: '0 8px 40px rgba(139,0,64,.3)',
         }}>
           <div style={{ display:'flex', flexDirection:'column', gap:'2rem' }}>
@@ -87,7 +96,7 @@ export default function PartyDetails() {
               <div>
                 <p style={{
                   fontFamily:"'Anton SC',sans-serif",
-                  fontSize:'clamp(2.2rem,5.5vw,4.4rem)',
+                  fontSize: isMobile ? 'clamp(1.6rem,7vw,4.4rem)' : 'clamp(2.2rem,5.5vw,4.4rem)',
                   color:'#fff', lineHeight:.9,
                   textShadow:'3px 4px 0 rgba(0,0,0,.2)',
                 }}>??? ✦ ???</p>
@@ -110,7 +119,7 @@ export default function PartyDetails() {
               <div>
                 <p style={{
                   fontFamily:"'Anton SC',sans-serif",
-                  fontSize:'clamp(2.2rem,5.5vw,4.4rem)',
+                  fontSize: isMobile ? 'clamp(1.6rem,7vw,4.4rem)' : 'clamp(2.2rem,5.5vw,4.4rem)',
                   color:'#fff', lineHeight:.9,
                   textShadow:'3px 4px 0 rgba(0,0,0,.2)',
                 }}>??? ✦ ???</p>
@@ -133,7 +142,7 @@ export default function PartyDetails() {
               <div>
                 <p style={{
                   fontFamily:"'Anton SC',sans-serif",
-                  fontSize:'clamp(2.2rem,5.5vw,4.4rem)',
+                  fontSize: isMobile ? 'clamp(1.6rem,7vw,4.4rem)' : 'clamp(2.2rem,5.5vw,4.4rem)',
                   color:'#fff', lineHeight:.9,
                   textShadow:'3px 4px 0 rgba(0,0,0,.2)',
                 }}>??? ✦ ???</p>

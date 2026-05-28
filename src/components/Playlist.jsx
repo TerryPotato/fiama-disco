@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 
@@ -55,6 +56,14 @@ function SimpleCD() {
 
 export default function Playlist() {
   const { ref, inView } = useInView({ triggerOnce:true, threshold:.12 })
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 640)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   return (
     <section
@@ -94,7 +103,7 @@ export default function Playlist() {
       </motion.h2>
 
       <div style={{
-        display:'flex', gap:'3rem', alignItems:'center',
+        display:'flex', gap: isMobile ? '1.5rem' : '3rem', alignItems:'center',
         justifyContent:'center', maxWidth:'900px',
         margin:'0 auto', flexWrap:'wrap',
       }}>
@@ -116,7 +125,9 @@ export default function Playlist() {
             background:'#FFFFF8',
             borderRadius:'4px',
             padding:'1.5rem 1.5rem 1.5rem 2.2rem',
-            minWidth:'280px', maxWidth:'360px', flexGrow:1,
+            minWidth: isMobile ? 'unset' : '280px',
+            maxWidth:'360px', flexGrow:1,
+            width: isMobile ? '100%' : 'auto',
             boxShadow:'4px 5px 0 rgba(0,0,0,.2)',
             backgroundImage:'repeating-linear-gradient(transparent, transparent 31px, #c8d8ff 31px, #c8d8ff 33px)',
             backgroundPositionY:'1.5rem',
