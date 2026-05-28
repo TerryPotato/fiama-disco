@@ -15,20 +15,20 @@ function getTimeLeft() {
   }
 }
 
-function DigitBlock({ value, label, inView, delay }) {
+function DigitBlock({ value, label, inView, delay, isMobile }) {
   return (
     <motion.div
       initial={{ opacity:0, y:40 }}
       animate={inView ? { opacity:1, y:0 } : {}}
       transition={{ duration:.7, delay, type:'spring' }}
-      style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:'.7rem' }}
+      style={{ display:'flex', flexDirection:'column', alignItems:'center', gap: isMobile ? '.4rem' : '.7rem' }}
     >
       <div style={{
         background: 'rgba(139, 0, 64, 0.72)',
         border: '3px solid rgba(255,31,143,.6)',
-        borderRadius: '14px',
-        padding: '1.8rem 2rem',
-        minWidth: '120px',
+        borderRadius: isMobile ? '8px' : '14px',
+        padding: isMobile ? '.6rem .55rem' : '1.8rem 2rem',
+        minWidth: isMobile ? 'unset' : '120px',
         textAlign: 'center',
         boxShadow: '4px 6px 0 rgba(139,0,64,.8), 0 16px 40px rgba(0,0,0,.35)',
         backdropFilter: 'blur(8px)',
@@ -36,7 +36,7 @@ function DigitBlock({ value, label, inView, delay }) {
       }}>
         <span style={{
           fontFamily: "'JetBrains Mono',monospace",
-          fontSize: 'clamp(3rem,6vw,5rem)',
+          fontSize: isMobile ? 'clamp(1.6rem,9vw,2.4rem)' : 'clamp(3rem,6vw,5rem)',
           fontWeight: 700,
           color: '#fff',
           lineHeight: 1,
@@ -49,7 +49,8 @@ function DigitBlock({ value, label, inView, delay }) {
       </div>
       <span style={{
         fontFamily: "'Anton SC',sans-serif",
-        fontSize: '.75rem', fontWeight:400,
+        fontSize: isMobile ? '.6rem' : '.75rem',
+        fontWeight:400,
         letterSpacing: '.25em', color: '#8B0040',
         textTransform: 'uppercase',
         opacity: .9,
@@ -58,13 +59,13 @@ function DigitBlock({ value, label, inView, delay }) {
   )
 }
 
-function Colon({ blink = false }) {
+function Colon({ blink = false, isMobile }) {
   return (
     <span style={{
       fontFamily: "'JetBrains Mono'",
-      fontSize: 'clamp(3rem,6vw,5rem)',
+      fontSize: isMobile ? 'clamp(1.6rem,9vw,2.4rem)' : 'clamp(3rem,6vw,5rem)',
       color: '#8B0040',
-      paddingBottom: '2.6rem',
+      paddingBottom: isMobile ? '1.5rem' : '2.6rem',
       fontWeight: 700,
       opacity: .7,
       animation: blink ? 'digit-blink 1s step-start infinite' : 'none',
@@ -74,11 +75,19 @@ function Colon({ blink = false }) {
 
 export default function Countdown() {
   const [time, setTime] = useState(getTimeLeft)
+  const [isMobile, setIsMobile] = useState(false)
   const { ref, inView } = useInView({ triggerOnce:true, threshold:.12 })
 
   useEffect(() => {
     const id = setInterval(() => setTime(getTimeLeft()), 1000)
     return () => clearInterval(id)
+  }, [])
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 640)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
   }, [])
 
   return (
@@ -87,9 +96,9 @@ export default function Countdown() {
       ref={ref}
       style={{
         position: 'relative',
-        padding: '8rem 2rem',
+        padding: isMobile ? '4rem 1rem' : '8rem 2rem',
         overflow: 'hidden',
-        minHeight: '560px',
+        minHeight: isMobile ? '360px' : '560px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -98,17 +107,17 @@ export default function Countdown() {
       }}
     >
 
-      <div style={{ position:'relative', zIndex:2, width:'100%', maxWidth:'960px', margin:'0 auto', padding: '0 2rem' }}>
+      <div style={{ position:'relative', zIndex:2, width:'100%', maxWidth:'960px', margin:'0 auto', padding: isMobile ? '0 .5rem' : '0 2rem' }}>
         <motion.h2
           initial={{ opacity:0, y:40 }}
           animate={inView ? { opacity:1, y:0 } : {}}
           transition={{ duration:.7 }}
           style={{
             fontFamily: "'Anton SC',sans-serif",
-            fontSize: 'clamp(1.8rem,4vw,3.2rem)',
+            fontSize: 'clamp(1.4rem,5vw,3.2rem)',
             color: '#8B0040',
             textAlign: 'center',
-            marginBottom: '2.5rem',
+            marginBottom: isMobile ? '1.5rem' : '2.5rem',
             display: 'block',
             textShadow: '1px 2px 0 rgba(255,255,255,.4)',
             letterSpacing: '.06em',
@@ -117,14 +126,14 @@ export default function Countdown() {
           TIME UNTIL THE DROP
         </motion.h2>
 
-        <div style={{ display:'flex', justifyContent:'center', alignItems:'center', gap:'.6rem', flexWrap:'nowrap' }}>
-          <DigitBlock value={time.days} label="DAYS" inView={inView} delay={.2}/>
-          <Colon />
-          <DigitBlock value={time.hrs}  label="HRS"  inView={inView} delay={.35}/>
-          <Colon blink />
-          <DigitBlock value={time.min}  label="MIN"  inView={inView} delay={.5}/>
-          <Colon blink />
-          <DigitBlock value={time.sec}  label="SEC"  inView={inView} delay={.65}/>
+        <div style={{ display:'flex', justifyContent:'center', alignItems:'center', gap: isMobile ? '.25rem' : '.6rem', flexWrap:'nowrap' }}>
+          <DigitBlock value={time.days} label="DAYS" inView={inView} delay={.2}  isMobile={isMobile}/>
+          <Colon isMobile={isMobile}/>
+          <DigitBlock value={time.hrs}  label="HRS"  inView={inView} delay={.35} isMobile={isMobile}/>
+          <Colon blink isMobile={isMobile}/>
+          <DigitBlock value={time.min}  label="MIN"  inView={inView} delay={.5}  isMobile={isMobile}/>
+          <Colon blink isMobile={isMobile}/>
+          <DigitBlock value={time.sec}  label="SEC"  inView={inView} delay={.65} isMobile={isMobile}/>
         </div>
       </div>
     </section>

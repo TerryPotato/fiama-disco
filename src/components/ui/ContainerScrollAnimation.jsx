@@ -22,7 +22,7 @@ export const ContainerScroll = ({ titleComponent, children }) => {
   return (
     <div
       ref={containerRef}
-      className="h-[52rem] md:h-[76rem] flex items-center justify-center relative py-2 md:py-20"
+      className="h-[64rem] md:h-[80rem] flex items-center justify-center relative py-2 md:py-20"
     >
       <div
         className="py-10 md:py-40 w-full relative"
@@ -56,7 +56,7 @@ export const Card = ({ rotate, scale, children }) => (
       boxShadow:
         "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
     }}
-    className="-mt-12 h-[14rem] md:h-[22rem] border-4 border-[#FF1F8F] bg-transparent rounded-[20px] shadow-2xl overflow-hidden"
+    className="-mt-12 h-[24rem] md:h-[30rem] border-4 border-[#FF1F8F] bg-transparent rounded-[20px] shadow-2xl overflow-hidden"
   >
     <div className="h-full w-full overflow-hidden rounded-2xl md:rounded-2xl">
       {children}
